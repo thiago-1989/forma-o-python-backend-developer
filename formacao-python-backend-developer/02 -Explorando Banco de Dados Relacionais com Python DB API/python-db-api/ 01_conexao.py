@@ -50,3 +50,4 @@ def remover_registro(mydb, cursor, id):
 
 atualiza_registro(mydb, cursor, "Thiago Oliveira", "thiago@gmail.com", 1)
 remover_registro(mydb, cursor, 1)
+"""Commit"""
