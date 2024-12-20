@@ -26,9 +26,8 @@ def criar_tabela(mydb, cursor, nome):
         "nome VARCHAR(100), email varchar(150))")
     mydb.commit()
 
-def inserir_registro(mydb, cursor, nome, email):
-    data = (nome, email)
-    cursor.execute("INSERT INTO clientes (nome, email) VALUES (%s, %s);", data)
+def inserir_registro(mydb, cursor, data):
+    cursor.execute("INSERT INTO IF NOT EXISTS clientes (nome, email) VALUES (%s, %s);", data)
     mydb.commit()
 
 def atualiza_registro(mydb, cursor, nome, email, id):
@@ -48,5 +47,18 @@ def remover_registro(mydb, cursor, id):
         print(f"Erro ao remover registro: {err}")
 
 
-atualiza_registro(mydb, cursor, "Thiago Oliveira", "thiago@gmail.com", 1)
-remover_registro(mydb, cursor, 1)
+def inserir_muitos(mydb, cursor, data):
+    try:
+        cursor.executemany("INSERT INTO clientes (nome, email) VALUES (%s, %s);", data)
+        mydb.commit()
+        print(f"Registro com dados inseridos com sucesso!")
+    except mysql.connector.Error as err:
+        print("Erro")
+
+data = [("Adamastor", "adm@gmail.com"), ("Margarethi", "mg@gmail.com"), ("thiago", "th@gmail.com")]
+
+"""inserir_muitos(mydb, cursor, data)"""
+
+data = ("thiago", "th@gmail.com")
+
+inserir_registro(mydb, cursor, data)
