@@ -24,5 +24,5 @@ tabela = cursor_sqlite.execute("SELECT * FROM clientes")
 resultados = tabela.fetchall()
 
 # Imprimindo os resultados
-for item in range(len(resultados)):
-    print(resultados[item])
+for linha in resultados:
+    print(linha)
