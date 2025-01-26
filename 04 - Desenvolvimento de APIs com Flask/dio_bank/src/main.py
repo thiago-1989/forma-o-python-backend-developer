@@ -24,5 +24,5 @@ def welcome(usuario, idade, email):
 with app.test_request_context():
     print(url_for("hello"))
     print(url_for("hello", next="/"))
-    print(url_for("welcome", usuario="Thiago Oliveira", idade=35, email="<thiaoliveira@gmail.com>"))
+    print(url_for("welcome", usuario="Thiago Oliveira", idade=35, email="<thiagoliveira@gmail.com>"))
     
