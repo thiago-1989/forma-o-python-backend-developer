@@ -1,6 +1,7 @@
 from flask import Flask, url_for, request
 
 app = Flask(__name__)
+usuario, idade, email = "Thiago", 35, "thiago@outlook.com"
 
 @app.route("/hello/", methods=["GET", "POST"])
 def hello():
@@ -12,7 +13,7 @@ def hello():
         return {
             "message": "Olá, dev! Você fez uma requisição GET"
         }
-@app.route("/welcome/<usuario>/<int:idade>/<string:email>")
+@app.route("/welcome")
 def welcome(usuario, idade, email):
     return {
         "Message": "Seja bem-vindo!",
@@ -25,4 +26,3 @@ with app.test_request_context():
     print(url_for("hello"))
     print(url_for("hello", next="/"))
     print(url_for("welcome", usuario="Thiago Oliveira", idade=35, email="<thiagoliveira@gmail.com>"))
-    

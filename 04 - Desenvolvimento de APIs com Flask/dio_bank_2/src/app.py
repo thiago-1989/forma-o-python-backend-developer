@@ -1,4 +1,22 @@
-from flask import Flask  # Importa a classe Flask para criar a aplicação web
+import os
+import click
+from flask import Flask, current_app  # Importa a classe Flask para criar a aplicação web
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase
+
+
+class Base(DeclarativeBase):
+  pass
+
+db = SQLAlchemy(model_class=Base)
+
+@click.command('init-db')
+def init_db_command():
+    """Clear the existing data and create new tables."""
+    global db
+    with current_app.app_context():
+        db.create_all()
+    click.echo('Initialized the database.')
 
 def create_app(test_config=None):
     # Cria e configura a aplicação Flask
@@ -7,7 +25,7 @@ def create_app(test_config=None):
     # Define a configuração padrão da aplicação
     app.config.from_mapping(
         SECRET_KEY='dev',  # Chave secreta utilizada para manter os dados seguros (ideal usar outra chave em produção)
-        DATABASE='diobank.sqlite',  # Caminho do arquivo do banco de dados SQLite
+        SQLALCHEMY_DATABASE_URI="sqlite:///diobank.sqlite",  # Caminho do arquivo do banco de dados SQLite
     )
 
     if test_config is None:
@@ -17,19 +35,12 @@ def create_app(test_config=None):
         # Carrega a configuração de teste, se passada como argumento
         app.config.from_mapping(test_config)
 
-    # Garante que a pasta de instância exista
-    try:
-        os.makedirs(app.instance_path)  # Cria a pasta de instância se ela não existir
-    except OSError:
-        pass  # Ignora o erro se a pasta já existir
-
     # Define uma rota simples que retorna "Hello, World!" ao acessar /hello
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
 
-    from . import db
-
+    app.cli.add_command(init_db_command)
     db.init_app(app)
 
     return app  # Retorna a aplicação configurada
